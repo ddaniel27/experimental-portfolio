@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Text+Me+One&display=swap');
+
+
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+body {
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+
+.buttonClass{
+  cursor:pointer;
+  z-index:1;
+  padding:1rem 2rem;
+  border-radius:2rem;
+  border:none;
+  background-color: transparent;
+  margin:.8rem auto;
+  font-weight: bold;
+  font-size:1.2rem;
+}
+
+.button-decoration{
+  background-color: #e259c7;
+  box-shadow: 5px 5px #2f51d7;
+  transition: .1s ease-out;
+}
+.button-decoration:active{
+  background-color: #80f0bc;
+  transform: translate(5px,5px);
+  box-shadow:0 0 #2f51d7;
+}
+
+.button-under-animation{
+  position:relative;
+}
+.button-under-animation::after{
+  content: "";
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2f51d7, #80f0bc 40%, #e259c7 90%);
+  position: absolute;
+  left: 1.6rem;
+  top:2.4rem;
+  transition: 0.2s ease-in-out;
+}
+.button-under-animation:hover::after{
+  width: 2rem;
+}
+.dropdown, .voxel-editor-buttons{
+  position:absolute;
+  top: 1rem;
+  left: 1rem;
+}
+.page-buttons{
+  display: none;
+}
+.voxel-editor-buttons{
+  left: 90vw;
+}
+
+
+.point-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position:absolute;
+  left:50%;
+  top:50%;
+}
+
+.point-container.visible .text{
+  opacity:1;
+}
+
+.text{
+  cursor:default;
+  opacity:0;
+  transition: .3s ease-in;
+  position: absolute;
+  bottom:5vh;
+  background: none;
+  width: 10rem;
+  height: 0px;
+  user-select: none;
+  color:rgb(221, 181, 0);
+  text-align:center;
+  font-size:1.2rem;
+  font-family: 'Text Me One', sans-serif;
+  font-weight: bold;
+  border: 1px dashed #d40890;
+  text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+}
+
+.back-btn{
+  cursor: pointer;
+  position: absolute;
+  top: 2vh;
+  left: 1vw;
+  z-index: 1;
+  background: none;
+  font-family: 'Text Me One', sans-serif;
+  font-weight: bold;
+  font-size: 2rem;
+  color: rgb(167, 3, 153);
+  border: none;
+  text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+}
+
+.bars-6 {
+  width:45px;
+  height:60px;
+  --c:linear-gradient(rgb(26, 214, 73) 0 0, rgb(0, 44, 190), rgb(162, 0, 255));
+  background: 
+    var(--c) 0%   50%,
+    var(--c) 50%  50%,
+    var(--c) 100% 50%;
+  background-size:9px 50%;
+  background-repeat: no-repeat;
+  animation:b6 1s infinite linear;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  transition: .3s ease-in-out;
+  opacity:1;
+  user-select: none;
+}
+@keyframes b6 {
+    20% {background-position:0% 0%  ,50% 50% ,100% 50% }
+    40% {background-position:0% 100%,50% 0%  ,100% 50% }
+    60% {background-position:0% 50% ,50% 100%,100% 0%  }
+    80% {background-position:0% 50% ,50% 50% ,100% 100%}
+}
+
