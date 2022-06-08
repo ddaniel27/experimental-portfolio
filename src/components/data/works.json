@@ -1,0 +1,22 @@
+{
+    "works":[
+        {
+            "title": "chrome extension sp",
+            "description": "I want to be productive as much as I can (and my friends too), that's why I developed a chrome extension to have a handy pomodoro timer to use when we need focus on our tasks. In the last recent version I added a timer tracker and some configuration stuff.",
+            "image": "https://i.imgur.com/18REPua.png",
+            "gif": "https://i.imgur.com/ZjKMzWf.gif"
+        },
+        {
+            "title": "Frontend Mentor Challenge",
+            "description":"Working on improve my frontend skill. A home/landing page for a design company.",
+            "image":"https://i.imgur.com/NXucij1.png",
+            "gif": "https://i.imgur.com/7xffCE8.gif"
+        },
+        {
+            "title": "This portfolio (old)",
+            "description": "This portfolio (old fashioned) is itself a project! Crazy, right?",
+            "image": "https://i.imgur.com/wGJJFbI.png",
+            "gif":"https://i.imgur.com/wGJJFbI.png"
+        }
+    ]
+}

@@ -22,6 +22,7 @@ let ambientLight, directionalLight, directionalLight2, particles
 let rotationSpeed = -0.2
 let loadBars
 let currentIntersect, customColor1, customColor2, velocityVector, worksPositions, linesMesh, linesVertexs, linesColors, focusObject = null
+let testVaraible = false
 const sphereRadius = 0.3
 const numProjects = 20
 const radio = 8
@@ -1497,6 +1498,7 @@ function initWorks(){
 
   window.addEventListener('pointerdown', onClickSphere)
   isWork = true
+  workGroup.scale.set(1, 1, 1)
 
   scene.add(workGroup)
 
@@ -1627,6 +1629,7 @@ function onClickSphere( event ){
         focusObject = sphereChoosen.object
         orbitControls.enabled = true
         velocityVector[idx] = auxVelocity
+        testVaraible = true
       },
       onInterrupt: ()=>{
         velocityVector[idx] = auxVelocity
@@ -1636,7 +1639,7 @@ function onClickSphere( event ){
   
 }
 function endWorks(){
-  isWork = false
+    isWork = false
     orbitControls.minDistance = 9
     orbitControls.maxDistance = 150
     orbitControls.enablePan = false
@@ -1683,14 +1686,13 @@ function endWorks(){
           scene.add(homeGroup)
           initAnimation()
           orbitControls.update()
+          for(let i= workGroup.children.length - 1; i >= 0; i--){
+            disposeObject(workGroup.children[i])
+          }
+          workGroup.children.splice(0, workGroup.children.length)
         }
       }
     )
-}
-
-
-function isFocusingObject(){
-  return focusObject !== null
 }
 
 function onResetCamera(){
@@ -1699,11 +1701,12 @@ function onResetCamera(){
   gsap.to(
     orbitControls.target,
     {
-      duration:1.5,
+      duration:1.3,
       x:0,
       y:0,
       z:0,
       onComplete: ()=>{
+        testVaraible = false
         orbitControls.enabled = true
       }
     }
@@ -1774,4 +1777,4 @@ function animate(){
 
 export default ThreeController
 
-export {onMergeClick, onResetClick, onStringClick, aChar, cChar, wChar, initAbout, endAbout, isFocusingObject, onResetCamera, endWorks}
+export {onMergeClick, onResetClick, onStringClick, aChar, cChar, wChar, initAbout, endAbout, testVaraible, onResetCamera, endWorks}
