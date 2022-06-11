@@ -3,6 +3,7 @@ import React from "react"
 import ThreeHomeComponent from './components/ThreeHomeComponent'
 import ThreeAboutComponent from './components/ThreeAboutComponent'
 import ThreeWorkComponent from "./components/ThreeWorkComponent"
+import ThreeContactComponent from "./components/ThreeContactComponent"
 import ThreeController from "./components/ThreeController"
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       {screen === "home" && <ThreeHomeComponent setScreen={setScreen} />}
       {screen === "about" && <ThreeAboutComponent setScreen={setScreen} />}
       {screen === "work" && <ThreeWorkComponent setScreen={setScreen} />}
+      {screen === "contact" && <ThreeContactComponent setScreen={setScreen} />}
 
     </div>
   );

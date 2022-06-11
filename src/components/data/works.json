@@ -17,6 +17,24 @@
             "description": "This portfolio (old fashioned) is itself a project! Crazy, right?",
             "image": "https://i.imgur.com/wGJJFbI.png",
             "gif":"https://i.imgur.com/wGJJFbI.png"
+        },
+        {
+            "title": "Frontend Mentor Challenge",
+            "description":"Working on improve my frontend skill. A home/landing page for a design company.",
+            "image":"https://i.imgur.com/YLYIK1f.png",
+            "gif": "https://i.imgur.com/Eb9dxu4.gif"
+        },
+        {
+            "title": "Simon says",
+            "description": "A simple Simon says game developed in my early days learning JavaScript. This was developed to test EventListeners and their beheavior in the page.",
+            "image": "https://i.imgur.com/aBh2TEp.png",
+            "gif": "https://i.imgur.com/V8fCcz8.gif"
+        },
+        {
+            "title": "Backend Projects",
+            "description": "I've done some backend projects, but I don't have any to show you here. If you want to see some of them, check my github page.",
+            "image": "https://imgur.com/CJRfhEf.gif",
+            "gif": "https://imgur.com/CJRfhEf.gif"
         }
     ]
 }

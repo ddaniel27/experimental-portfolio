@@ -1,7 +1,7 @@
 import React from "react";
 
 import {onMergeClick, onResetClick, onStringClick, aChar, cChar, wChar} from './ThreeController'
-function ThreeHomeComponent({setScreen}) {
+export default function ThreeHomeComponent({setScreen}) {
   
   const [showButtons, setShowButtons] = React.useState(false)
   const [merge, setMerge] = React.useState(false)
@@ -35,6 +35,10 @@ function ThreeHomeComponent({setScreen}) {
     setScreen("work")
     wChar()
   }
+  const handleContact = () => {
+    setScreen("contact")
+    cChar()
+  }
   return(
     <div className="buttons-container">
       <div className="voxel-editor-buttons">
@@ -58,10 +62,10 @@ function ThreeHomeComponent({setScreen}) {
         </button>
       </div>
       <div className="dropdown">
-        <button className="dropbtn buttonClass button-decoration" style={{"display": showButtons ? "block" : "none"}} onClick={handlePages}>CLICK ME</button>
+        <button className="dropbtn buttonClass button-decoration" style={{"display": showButtons ? "block" : "none"}} onClick={handlePages}>MENU</button>
         <div className="page-buttons" style={{"display": showPages ? "block" : "none"}}>
           <button
-            onClick={cChar}
+            onClick={handleContact}
             className ="buttonClass button-under-animation"
             style={{"display": showButtons ? "block" : "none"}}>
             C
@@ -84,5 +88,3 @@ function ThreeHomeComponent({setScreen}) {
     </div>
   )
 }
-
-export default ThreeHomeComponent

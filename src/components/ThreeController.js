@@ -1,27 +1,29 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+import { Flow } from 'three/examples/jsm/modifiers/CurveModifier.js'
 
-import { gsap } from 'gsap';
+import { gsap } from 'gsap'
 
 
 let camera, renderer, orbitControls, scene, refElement
 let raycaster, pointer
 let objects = []
 let vertices = []
-let isAbout = false
-let isWork = false
+let isAbout = false, isWork = false, isContact = false
 let points = []
+let curveHandles = []
 let originalCube, meshComponents, finalMesh, fatString
 let boxWireframe, sphereOrnament
-let aboutGroup = new THREE.Group()
-let homeGroup = new THREE.Group()
-let workGroup = new THREE.Group()
+let homeGroup = new THREE.Group(), aboutGroup = new THREE.Group(), workGroup = new THREE.Group(), contactGroup = new THREE.Group()
 let ambientLight, directionalLight, directionalLight2, particles
 let rotationSpeed = -0.2
 let loadBars
-let currentIntersect, customColor1, customColor2, velocityVector, worksPositions, linesMesh, linesVertexs, linesColors, focusObject = null
+let currentIntersect, customColor1, customColor2, velocityVector, worksPositions, linesMesh, linesVertexs, linesColors, flow, focusObject = null
 let testVaraible = false
 const sphereRadius = 0.3
 const numProjects = 20
@@ -37,7 +39,7 @@ const colorsArray = [
   "935b6d", "916988", "513d98", "aead3a", "9e6d71", "4b5bdc", "0cd36d",
   "250662", "cb5bea", "228916", "ac3e1b", "df514a", "539397", "880977",
   "f697c1", "ba96ce", "679c9d", "c6c42c", "5d2c52", "48b41b", "e1cf3b",
-  "5be4f0", "57c4d8", "a4d17a", "225b8", "be608b", "96b00c", "088baf",
+  "5be4f0", "57c4d8", "a4d17a", "225b8c", "be608b", "96b00c", "088baf",
   "f158bf", "e145ba", "ee91e3", "05d371", "5426e0", "4834d0", "802234",
   "6749e8", "0971f0", "8fb413", "b2b4f0", "c3c89d", "c9a941", "41d158",
   "fb21a3", "51aed9", "5bb32d", "807fbb", "21538e", "89d534", "d36647",
@@ -52,7 +54,7 @@ const colorsArray = [
   "8fe22a", "ef6e3c", "243eeb", "1dc188", "dd93fd", "3f8473", "e7dbce",
   "421f79", "7a3d93", "635f6d", "93f2d7", "9b5c2a", "15b9ee", "0f5997",
   "409188", "911e20", "1350ce", "10e5b1", "fff4d7", "cb2582", "ce00be",
-  "32d5d6", "17232", "608572", "c79bc2", "00f87c", "77772a", "6995ba",
+  "32d5d6", "172320", "608572", "c79bc2", "00f87c", "77772a", "6995ba",
   "fc6b57", "f07815", "8fd883", "060e27", "96e591", "21d52e", "d00043",
   "b47162", "1ec227", "4f0f6f", "1d1d58", "947002", "bde052", "e08c56",
   "28fcfd", "bb09bb", "36486a", "d02e29", "1ae6db", "3e464c", "a84a8f",
@@ -82,7 +84,7 @@ function ThreeController(refEl){
 function init(){
     //Scene
     scene = new THREE.Scene()
-    scene.background = new THREE.Color( 0xcfcfcf );
+    scene.background = new THREE.Color( 0xcfcfcf )
 
     //Camera
     camera = new THREE.PerspectiveCamera(
@@ -183,7 +185,7 @@ function init(){
 
 //Aux functions
 function customRand(min=100, max=300) {
-    return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min
 }
 function particlesGenerator(){
     const particlesGeometry = new THREE.BufferGeometry()
@@ -650,7 +652,7 @@ function cChar(){
     voxel1.position.set(customRand(), -customRand(), customRand())
     objects.push(voxel1)
     // 4, -12, 4
-   const voxel2 = new THREE.Mesh(
+    const voxel2 = new THREE.Mesh(
         generalGeometry,
         meshComponents.material
     )
@@ -795,7 +797,32 @@ function cChar(){
               delay:1.6,
               ease: "bounce.out",
               x: 2 * Math.PI,
-              onComplete: function(){ onResetClick() }
+              onComplete: function(){
+                gsap.to(
+                  homeGroup.scale,
+                  {
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    x: 0.01,
+                    y: 0.01,
+                    z: 0.01,
+                    onComplete: function(){
+                      homeGroup.remove(voxel1)
+                      homeGroup.remove(voxel2)
+                      homeGroup.remove(voxel4)
+                      homeGroup.remove(voxel5)
+                      homeGroup.remove(voxel6)
+                      homeGroup.remove(voxel7)
+                      homeGroup.remove(voxel9)
+                      homeGroup.remove(voxel10)
+                      onResetClick()
+                      scene.remove(homeGroup)
+                      homeGroup.scale.set(1,1,1)
+                      initContact()
+                    }
+                  }
+                )
+              }
             }
           )
         }
@@ -891,6 +918,17 @@ function cChar(){
             }
           )
         }
+      }
+    )
+    
+    gsap.to(
+      scene.background,
+      {
+        duration: 2,
+        delay: 5,
+        r:0,
+        g:0,
+        b:0
       }
     )
 }
@@ -1163,7 +1201,7 @@ function wChar(){
     )
 }
 function farthestPoint(){
-    const positionAttribute = finalMesh.geometry.getAttribute( 'position' );
+    const positionAttribute = finalMesh.geometry.getAttribute( 'position' )
     const result = {
       maxValue: 0,
       x: 0,
@@ -1171,14 +1209,14 @@ function farthestPoint(){
       z: 0
     }
     const origin = new THREE.Vector3(0, 0, 0)
-    const vertex = new THREE.Vector3();
+    const vertex = new THREE.Vector3()
   
     for ( 
       let vertexIndex = 0;
       vertexIndex < positionAttribute.count;
       vertexIndex ++
     ) {
-        vertex.fromBufferAttribute( positionAttribute, vertexIndex );
+        vertex.fromBufferAttribute( positionAttribute, vertexIndex )
         let distance = origin.distanceTo(vertex)
       if(distance > result.maxValue){
         result.maxValue = distance
@@ -1197,14 +1235,14 @@ function disposeObject( object ){
     renderer.renderLists.dispose()
 }
 function pathResolve(initPoint){
-    const positionAttribute = finalMesh.geometry.getAttribute( 'position' );
+    const positionAttribute = finalMesh.geometry.getAttribute( 'position' )
     const result = {
         minValue: 10000,
         x: 0,
         y: 0,
         z: 0
     }
-    const vertex = new THREE.Vector3();
+    const vertex = new THREE.Vector3()
     const initialPoint = new THREE.Vector3(
             initPoint.x,
             initPoint.y,
@@ -1216,9 +1254,9 @@ function pathResolve(initPoint){
         vertexIndex < positionAttribute.count;
         vertexIndex ++
     ) {
-        vertex.fromBufferAttribute( positionAttribute, vertexIndex );
+        vertex.fromBufferAttribute( positionAttribute, vertexIndex )
         const arr = vertices.filter( vertice => vertex.equals(vertice))
-        if(arr.length) continue;
+        if(arr.length) continue
         let distance = initialPoint.distanceTo(vertex)
         if(distance < result.minValue && distance){
         result.minValue = distance
@@ -1226,7 +1264,7 @@ function pathResolve(initPoint){
         result.y = vertex.y
         result.z = vertex.z
         }
-        if(distance === 8) break;
+        if(distance === 8) break
     }
     return result
 }
@@ -1605,8 +1643,8 @@ function onClickSphere( event ){
   updatePointer(event)
   const intersects = raycaster.intersectObjects(worksPositions, false)
   let sphereChoosen = intersects.length ? intersects[0] : null
-  if(!sphereChoosen) return;
-  if(sphereChoosen.object.uuid === focusObject?.uuid) return;
+  if(!sphereChoosen) return
+  if(sphereChoosen.object.uuid === focusObject?.uuid) return
   
   gsap.killTweensOf(orbitControls.target, "x,y,z")
   orbitControls.enabled = false
@@ -1694,7 +1732,6 @@ function endWorks(){
       }
     )
 }
-
 function onResetCamera(){
   focusObject = null
   gsap.killTweensOf(orbitControls.target, "x,y,z")
@@ -1711,6 +1748,124 @@ function onResetCamera(){
       }
     }
   )
+}
+
+//CONTACT FUNCTIONS
+function initContact(){
+  isContact = true
+  orbitControls.minDistance = 7
+  orbitControls.maxDistance = 20
+  camera.position.set(0, 7, 7)
+  const initialPoints = [
+    { x: 1, y: 0, z: - 1 },
+    { x: 1, y: 0, z: 1 },
+    { x: - 1, y: 0, z: 1 },
+    { x: - 1, y: 0, z: - 1 },
+  ]
+  const boxGeometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 )
+	const boxMaterial = new THREE.MeshBasicMaterial()
+
+  for ( const handlePos of initialPoints ) {
+    const handle = new THREE.Mesh( boxGeometry, boxMaterial )
+    handle.position.copy( handlePos )
+    curveHandles.push( handle )
+    // contactGroup.add( handle )
+  }
+  const curve = new THREE.CatmullRomCurve3(
+    curveHandles.map( ( handle ) => handle.position )
+  )
+  curve.curveType = 'centripetal'
+  curve.closed = true
+
+  const loader = new FontLoader()
+				loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+					const geometry = new TextGeometry( 'Look my GitHub ddaniel27!', {
+						font: font,
+						size: 0.2,
+						height: 0.05,
+						curveSegments: 12,
+						bevelEnabled: true,
+						bevelThickness: 0.02,
+						bevelSize: 0.01,
+						bevelOffset: 0,
+						bevelSegments: 5,
+					} )
+
+					geometry.rotateX( Math.PI )
+
+					const material = new THREE.MeshBasicMaterial( {
+						color: 0x99ffff
+					} )
+
+					const objectToCurve = new THREE.Mesh( geometry, material )
+
+					flow = new Flow( objectToCurve )
+					flow.updateCurve( 0, curve )
+					contactGroup.add( flow.object3D )
+        } )
+
+
+
+  scene.add(contactGroup)
+}
+
+function endContact(){
+    isContact = false
+    orbitControls.minDistance = 9
+    orbitControls.maxDistance = 150
+    orbitControls.enablePan = false
+    orbitControls.enableDamping = false
+    orbitControls.autoRotate = false
+    orbitControls.maxAzimuthAngle = Infinity
+    orbitControls.minAzimuthAngle = Infinity
+    orbitControls.autoRotateSpeed = rotationSpeed
+    orbitControls.maxPolarAngle = Math.PI
+    orbitControls.minPolarAngle = 0
+    onResetClick()
+    gsap.to(
+      contactGroup.scale,
+      {
+        duration: 1.4,
+        x: 0.01,
+        y: 0.01,
+        z: 0.01,
+        onComplete: () =>{
+            scene.remove(contactGroup)
+            contactGroup.scale.set(1,1,1)
+        }
+      }
+    )
+    gsap.to(
+      particles.material,
+      {
+        duration: 1.4,
+        opacity: 0,
+        onComplete: () =>{
+          scene.remove(particles)
+        }
+      }
+    )
+
+    gsap.to(
+      scene.background,
+      {
+        duration: 1.4,
+        r:0.812,
+        g:0.812,
+        b:0.812,
+        onComplete: () =>{
+          camera.position.set(24, 18, 250)
+          scene.add(homeGroup)
+          initAnimation()
+          orbitControls.update()
+          for(let i= contactGroup.children.length - 1; i >= 0; i--){
+            disposeObject(contactGroup?.children[i])
+          }
+          contactGroup.children.splice(0, contactGroup.children.length)
+        }
+      }
+    )
 }
 
 
@@ -1767,6 +1922,9 @@ function animate(){
     orbitControls.update()
   }
   
+  if(isContact && flow){
+    flow.moveAlongCurve( 0.001 )
+  }
 
     //Renderer
   renderer.render(scene, camera)
@@ -1777,4 +1935,4 @@ function animate(){
 
 export default ThreeController
 
-export {onMergeClick, onResetClick, onStringClick, aChar, cChar, wChar, initAbout, endAbout, testVaraible, onResetCamera, endWorks}
+export {onMergeClick, onResetClick, onStringClick, aChar, cChar, wChar, initAbout, endAbout, testVaraible, onResetCamera, endWorks, endContact}
